@@ -12,7 +12,7 @@
 
 <meta name="author" content="Jincheng Jiang" />
 
-<meta name="date" content="2024-11-18" />
+<meta name="date" content="2024-11-19" />
 
 <title>Estimation and Inference of VAR with Bayesian methods</title>
 
@@ -61,7 +61,7 @@ code span.ot { color: #007020; }
 <h1 class="title toc-ignore">Estimation and Inference of VAR with
 Bayesian methods</h1>
 <h3 class="author">Jincheng Jiang</h3>
-<h3 class="date">2024-11-18</h3>
+<h3 class="date">2024-11-19</h3>
 </div>
 </header>
 
@@ -69,10 +69,10 @@ Bayesian methods</h1>
 <div id="TOC" class="toc">
 <div class="inner">
 <ul>
-<li><a href="#a-reduced-form-bayesian-var" id="toc-a-reduced-form-bayesian-var">A reduced form Bayesian
-VAR</a></li>
+<li><a href="#a-reduced-form-var" id="toc-a-reduced-form-var">A reduced
+form VAR</a></li>
 <li><a href="#estimating-var-via-ols" id="toc-estimating-var-via-ols">Estimating VAR via OLS</a></li>
-<li><a href="#estimation-var-via-bayesian-method" id="toc-estimation-var-via-bayesian-method">Estimation VAR via Bayesian
+<li><a href="#estimating-via-bayesian-method" id="toc-estimating-via-bayesian-method">Estimating via Bayesian
 method</a></li>
 <li><a href="#identification-and-inference" id="toc-identification-and-inference">Identification and
 Inference</a></li>
@@ -90,25 +90,24 @@ Restrictions</a></li>
 <div id="content-wrapper">
   <div class="inner clearfix">
     <section id="main-content">
-<ul class="task-list">
-<li><label><input type="checkbox" checked></input>basic VAR, OLS
-Estimation</label></li>
-<li><label><input type="checkbox" checked></input>IRF, FEVD, HDC and
-plots</label></li>
-<li><label><input type="checkbox"></input>identification via recursive and IV
-approach (soon…)</label></li>
-<li><label><input type="checkbox"></input>inference via bootstrap (optional,
-not required with bayesian method)</label></li>
-<li><label><input type="checkbox"></input>bayesian VAR</label></li>
-<li><label><input type="checkbox"></input>identification via narrative sign
-restrictions (Antolín-Díaz and Rubio-Ramírez, 2018) with bayesian
-method, if time permits</label></li>
-<li><label><input type="checkbox"></input>testing on examples (SW 2001, A and
-R 2018, etc.)</label></li>
-<li><label><input type="checkbox"></input>R package</label></li>
+<p>this post won’t exist without these resources:</p>
+<ul>
+<li>Antolín-Díaz, Juan, and Juan F. Rubio-Ramírez. 2018. “Narrative Sign
+Restrictions for SVARs.” American Economic Review, 108 (10):
+2802–29.</li>
+<li><a href="https://github.com/kthohr/BMR">Bayesian Macroeconometrics
+in R</a></li>
+<li>Juan F. Rubio-Ramírez, Daniel F. Waggoner, Tao Zha. 2010.
+“Structural Vector Autoregressions: Theory of Identification and
+Algorithms for Inference.” The Review of Economic Studies, 77(2):
+665–696.</li>
+<li>Kilian L, Lütkepohl H. “Structural Vector Autoregressive Analysis.”
+Cambridge University Press, 2017.</li>
+<li>Yifei Lyu’s lecture notes</li>
 </ul>
-<div id="a-reduced-form-bayesian-var" class="section level2">
-<h2>A reduced form Bayesian VAR</h2>
+<p>Great Thanks!</p>
+<div id="a-reduced-form-var" class="section level2">
+<h2>A reduced form VAR</h2>
 <p>Let’s consider a m-dimension VAR(p) model:</p>
 <p><span class="math display">\[
 Y_t = \alpha + \sum_{s=1}^{p}Y_{t-s} \beta_{s} + \epsilon_{t} \tag{1}
@@ -196,8 +195,8 @@ Y = X \beta + \epsilon
 \]</span></p>
 <p>this is done in the R code.</p>
 </div>
-<div id="estimation-var-via-bayesian-method" class="section level2">
-<h2>Estimation VAR via Bayesian method</h2>
+<div id="estimating-via-bayesian-method" class="section level2">
+<h2>Estimating via Bayesian method</h2>
 <p>Why do we bother to use bayesian method where OLS would simply solve
 the problem? Because bayesian method would be of great help if we want
 to do inference, which I will talk about below. Here I first outline the
@@ -214,7 +213,7 @@ fact it should be <span class="math inline">\((m \times (T-lag)) \times
 1\)</span>, for convenience I write <span class="math inline">\(T\)</span>). Here <span class="math inline">\(\text{vec}\)</span> means to stack the matrix
 vertically by column and <span class="math inline">\(\otimes\)</span>
 means the Kronecker product. In R, it can be done by
-<code>matlib::vec</code> and <code>%x%</code>. Note <span class="math inline">\(\mathbb{I}_{m}\)</span> is the m-dimension
+<code>as.vector</code> and <code>%x%</code>. Note <span class="math inline">\(\mathbb{I}_{m}\)</span> is the m-dimension
 identity matrix.</p>
 <p>Again, we illustrate (3) using the VAR(2) example, it says</p>
 <p><span class="math display">\[
@@ -303,8 +302,8 @@ appropriate priors.</p>
 inverse-Wishart distribution from <a href="https://rdrr.io/cran/nicheROVER/src/R/rwish.R">this package</a>,
 which should be easily transformed to <code>Rcpp</code> code.</p>
 </blockquote>
-<p>In fact it is the case if we use the Normal-inverse-Wishart Prior,
-which specifies the priors of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\Sigma\)</span> to be <strong>independently normal
+<p>In fact it is the case if we use the independent
+Normal-inverse-Wishart Prior, which specifies the priors of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\Sigma\)</span> to be <strong>independently normal
 and inverse-Wishart</strong>. The result is as follow:</p>
 <p>First, use bayesian formula we know the joint posterior distribution
 satisfies</p>
@@ -403,10 +402,10 @@ equality just give us <span class="math inline">\(m(m-1)/2\)</span>
 equations, this <span class="math inline">\(\mathcal{B}\)</span> is not
 identified, i.e. we lack enough assumptions to identify <span class="math inline">\(\mathcal{B}\)</span> matrix.</p>
 <p>A possible solution is setting <span class="math inline">\(\mathcal{B}\)</span> to be lower triangle, which
-requires <span class="math inline">\(b_{ij}=0\)</span> if <span class="math inline">\(i&lt;j\)</span>. This assumption is widely used in
-old times because it’s easy to implemented and has straightforward
+requires <span class="math inline">\(b_{ij} = 0\)</span> if <span class="math inline">\(i &lt; j\)</span>. This assumption is widely used
+in old times because it’s easy to implemented and has straightforward
 economic meaning: variable 1 won’t affected by shock 2 to last in the
-short run, variable 2 won’t affected by shock 3 to last in the shprt
+short run, variable 2 won’t affected by shock 3 to last in the short
 run, and so on. But recently people find this assumption might be too
 strong and may not be realistic.</p>
 <p>Another solution is using IV, which heavily relies on accessible data
@@ -434,12 +433,134 @@ IRF.</p>
 </div>
 <div id="sign-restrictions" class="section level2">
 <h2>Sign Restrictions</h2>
-<p>TODO</p>
 <div id="basics" class="section level3">
 <h3>Basics</h3>
+<p>Traditional sign restrictions don’t set entries of <span class="math inline">\(\mathcal{B}\)</span> matrix to certain values.
+Instead, it utilize economic theories to restrict the sign of entries of
+<span class="math inline">\(\mathcal{B}\)</span> matrix to be positive,
+negative, or zero. For example, consider the bi-variate VAR(2) model</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+    y_{t} \\
+    \pi_{t}
+\end{bmatrix} = \begin{bmatrix}
+    \alpha_{0} \\
+    \beta_{0}
+\end{bmatrix} + \begin{bmatrix}
+    \alpha_{11} &amp; \alpha_{12} \\
+    \beta_{21} &amp; \beta_{22}
+\end{bmatrix} \begin{bmatrix}
+    y_{t-1} \\
+    \pi_{t-1}
+\end{bmatrix} + \begin{bmatrix}
+    \alpha_{21} &amp; \alpha_{22} \\
+    \beta_{21} &amp; \beta_{22}
+\end{bmatrix} \begin{bmatrix}
+    y_{t-2} \\
+    \pi_{t-2}
+\end{bmatrix} + \mathcal{B} \begin{bmatrix}
+    \xi_{t}^{y}\\
+    \xi_{t}^{\pi}
+\end{bmatrix}
+\]</span></p>
+<p>Business cycle theory tells us, faced with demand shocks, inflation
+should move with the same direction of demand shock. That is, <span class="math inline">\(\pi_{t} \uparrow \uparrow xi_{t}^{y}\)</span>.
+Thus, we can add sign restrictions to <span class="math inline">\(\mathcal{B}\)</span> matrix like</p>
+<p><span class="math display">\[
+\mathcal{B} \leftarrow \begin{bmatrix}
+    \cdot &amp; \cdot \\
+    + &amp; \cdot
+\end{bmatrix}
+\]</span></p>
+<p>Which is very general and can be realistic. Adding restrictions to
+matrix <span class="math inline">\(\mathcal{B}\)</span> is actually
+equivalent to <strong>adding restrictions to zero-order IRF</strong>
+<span class="math inline">\(\Phi^{0}\)</span>, of course we can add
+restrictions to higher orders of IRFs to restrict the (relatively) long
+run effect of certain shocks on any variables.</p>
+<p>The problem of sign restrictions is that it’s difficult to implement.
+RUBIO-RAM´ IREZ et al.(2010) gives an algorithm to get a set of <span class="math inline">\(\mathcal{B}\)</span> matrix with sigh
+restrictions, which is based on the fact that matrix <span class="math inline">\(\mathcal{B}\)</span> must satisfy</p>
+<p><span class="math display">\[
+\Sigma = \mathcal{B} \mathcal{B}&#39;
+\]</span></p>
+<p>which is a necessary condition for true <span class="math inline">\(\mathcal{B}\)</span>. Also, use Cholesky
+decomposition we can get</p>
+<p><span class="math display">\[
+\Sigma = P P&#39;
+\]</span></p>
+<p>where <span class="math inline">\(P\)</span> is a <strong>lower
+triangular</strong> matrix. We can prove that <span class="math inline">\(\mathcal{B}\)</span> must equal <span class="math inline">\(P\)</span> multiplies some orthogonal matrix <span class="math inline">\(Q\)</span>, where <span class="math inline">\(Q
+Q&#39; = \mathbb{I}\)</span>. That is</p>
+<p><span class="math display">\[
+\text{if} \quad \Sigma = PP&#39;, \text{then} \quad \Sigma=\mathcal{B}
+\mathcal{B}&#39; \iff \mathcal{B} = PQ
+\]</span></p>
+<p><strong>Proof</strong>. <span class="math inline">\(\implies\)</span>: <span class="math inline">\(\mathcal{B} \mathcal{B}&#39; = PP&#39; \implies
+P^{-1}\mathcal{B} \mathcal{B}&#39; P&#39;^{-1}=\mathbb{I}\)</span></p>
+<p>let <span class="math inline">\(P^{-1}\mathcal{B}=Q\)</span>, we know
+<span class="math inline">\(Q Q&#39;= \mathbb{I}\)</span>, and <span class="math inline">\(\mathcal{B}=PQ\)</span>. Just note that <span class="math inline">\(P\)</span> is triangular and thus invertible.</p>
+<p><span class="math inline">\(\impliedby\)</span>: <span class="math inline">\(B = PQ \implies \mathcal{B} \mathcal{B}&#39; = PQ
+Q&#39; P&#39; = PP&#39; = \mathbb{I}\)</span> and we are done.</p>
+<p>This result tells us if we find a set of appropriate orthogonal
+matrix <span class="math inline">\(Q\)</span>, then we can get a set of
+matrix <span class="math inline">\(\tilde{\mathcal{B}}\)</span> which
+may contain the true <span class="math inline">\(\mathcal{B}\)</span>.
+Here is how the algorithm do:</p>
+<ol style="list-style-type: decimal">
+<li>Draw <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\Sigma\)</span> from posterior distribution, do
+Cholesky decomposition on <span class="math inline">\(\Sigma\)</span> to
+get <span class="math inline">\(P\)</span></li>
+<li>Generate an <span class="math inline">\(n \times n\)</span> matrix
+<span class="math inline">\(X\)</span> with all entries <span class="math inline">\(\sim \mathcal{N}(0,1)\)</span> iid.</li>
+<li>Do QR decomposition on <span class="math inline">\(X\)</span>, get
+<span class="math inline">\(X=QR\)</span>, where <span class="math inline">\(Q\)</span> is orthogonal and <span class="math inline">\(R\)</span> is upper triangular.</li>
+<li>Get “one draw” of <span class="math inline">\(\tilde{\mathcal{B}}=PQ\)</span></li>
+<li>Check whether <span class="math inline">\(\tilde{\mathcal{B}}\)</span> of IRF generated by
+it satisfies sign restriction, if yes, save this draw, if no, back to
+step 1.</li>
+<li>Repeat 1-5, until the number of saved draws equal the number of
+draws you desire.</li>
+</ol>
+<p>There are two points well notable:</p>
+<ul>
+<li>With sign restrictions we only yield set identify, that is, we don’t
+identify an exact <span class="math inline">\(\mathcal{B}\)</span>
+matrix, instead we get a set of <span class="math inline">\(\mathcal{B}\)</span> and thus a set of IRF. Then
+we plot the 5% and 95% quantiles of IRF and use the median or mean of
+IRF to mimic a point estimation.</li>
+<li>About matrix <span class="math inline">\(Q\)</span>. If <span class="math inline">\(Q\)</span> is generated from QR decomposition of a
+iid. normal matrix, then Q satisfies a <a href="https://nhigham.com/2020/04/22/what-is-a-random-orthogonal-matrix/">Haar
+distribution</a>, which means it’s probability measure may be “biased”
+when we compute IRF (containing power terms of <span class="math inline">\(Q\)</span>). Hence, frequentists’ “random draw”
+methodology may not be valid during this process, we’d better turn to
+bayesian methods to utilize this “belief”.</li>
+</ul>
 </div>
 <div id="narrative-sign-restrictions" class="section level3">
 <h3>Narrative Sign Restrictions</h3>
+<p>Antolín-Díaz and Rubio-Ramírez (2018) combines sigh restriction with
+historical facts. They impose restrictions not only on structural
+parameters and IRFs, but also on historical decomposition (HD), i.e. the
+cumulative effect of shock <span class="math inline">\(i\)</span> on
+variable <span class="math inline">\(j\)</span> during certain period.
+In their article they use two kind of such restrictions:</p>
+<ul>
+<li>Type A: a given shock was <strong>the most important (least
+important) driver</strong> of the unexpected change in a variable during
+some periods. That is, <strong>the absolute value of the HD of this
+shock is the largest (smallest)</strong> during some periods.</li>
+<li>Type B: a given shock was <strong>the overwhelming (negligible)
+driver</strong> of the unexpected change in a given variable during the
+period. That is, the absolute value of its HD is larger (smaller) than
+<strong>the sum of</strong> HDs of all other structural shocks</li>
+</ul>
+<p>Note that to check narrative sign restrictions, we need HD and thus
+estimated structural shocks <span class="math inline">\(\xi_{t}\)</span>, which should be computed by
+<span class="math inline">\(\mathcal{B}(Y-\beta X)\)</span> with a drawn
+<span class="math inline">\(\mathcal{B}\)</span>. This should not be
+difficult once the procedure of computing bayesian estimator, IRF and HD
+are well implemented.</p>
 </div>
 </div>
     </section>
